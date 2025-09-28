@@ -3,7 +3,9 @@ import pkg from '../package.json';
 export const getExternalPkgs = () => {
   const { platform } = process;
   return [
-    ...Object.keys(pkg.dependencies),
+    ...Object.keys(pkg.dependencies).filter(
+      (dep) => !['electron'].includes(dep),
+    ),
     ...(platform === 'darwin'
       ? ['@computer-use/libnut-darwin']
       : platform === 'win32'
