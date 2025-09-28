@@ -17,7 +17,15 @@
     "coverage": "vitest run --coverage",
     "publish:packages": "bash scripts/release-pkgs.sh",
     "publish-beta:packages": "bash scripts/release-beta-pkgs.sh",
-    "prepare": "husky"
+    "prepare": "husky",
+    "dev:cli": "cd multimodal/agent-tars/cli && pnpm run dev",
+    "build:cli": "cd multimodal/agent-tars/cli && pnpm run build",
+    "build:cli-deps": "cd multimodal && pnpm run build:tarko && pnpm run build:gui-agent && pnpm run build:agent-tars",
+    "build:cli-full": "pnpm run build:cli-deps && pnpm run build:cli",
+    "test:cli": "cd multimodal/agent-tars/cli && pnpm run test",
+    "cli": "cd multimodal/agent-tars/cli && node bin/cli.js",
+    "cli:version": "cd multimodal/agent-tars/cli && node bin/cli.js --version",
+    "cli:help": "cd multimodal/agent-tars/cli && node bin/cli.js --help"
   },
   "pnpm": {
     "patchedDependencies": {}
