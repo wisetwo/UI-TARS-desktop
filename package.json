@@ -24,6 +24,7 @@
     "build:cli-full": "pnpm run build:cli-deps && pnpm run build:cli",
     "test:cli": "cd multimodal/agent-tars/cli && pnpm run test",
     "cli": "cd multimodal/agent-tars/cli && node bin/cli.js",
+    "cli:dev": "cd multimodal/agent-tars/cli && node bin/cli.js dev --workspace ~/.agent-tars-workspace --config ~/.agent-tars-workspace/agent-tars.config.ts",
     "cli:version": "cd multimodal/agent-tars/cli && node bin/cli.js --version",
     "cli:help": "cd multimodal/agent-tars/cli && node bin/cli.js --help"
   },
