@@ -83,8 +83,16 @@ export function getLogoUrl(): string {
 /**
  * Get workspace navigation items from web UI config
  */
-export function getWorkspaceNavItems() {
-  return getWebUIConfig().workspace?.navItems || [];
+export function getWorkspaceNavItems(prefix?: string) {
+  const items = getWebUIConfig().workspace?.navItems || [];
+
+  if(prefix) {
+      items.forEach(item => {
+        item.link = item.link.replace('{prefix}', prefix);
+      });
+  }
+
+  return items;
 }
 
 /**
@@ -141,4 +149,22 @@ export function isSidebarEnabled(): boolean {
  */
 export function isHomeEnabled(): boolean {
   return getLayoutConfig().enableHome ?? true;
+}
+
+/**
+ * Get debug configuration from web UI config
+ */
+export function getDebugConfig() {
+  return (
+    getWebUIConfig().debug || {
+      enableEventStreamViewer: false,
+    }
+  );
+}
+
+/**
+ * Check if Event Stream Viewer is enabled
+ */
+export function isEventStreamViewerEnabled(): boolean {
+  return getDebugConfig().enableEventStreamViewer ?? false;
 }

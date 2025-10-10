@@ -63,7 +63,7 @@ export default {
               type: 'string',
               title: 'Browser Control',
               enum: ['hybrid'],
-              enumLabels: ['混合模式'],
+              enumLabels: ['Hybrid'],
               default: 'hybrid',
               placement: 'chat-bottom',
               visible: {
@@ -78,7 +78,7 @@ export default {
             agentMode: {
               id: runtimeSettings.agentMode,
               browserMode: runtimeSettings.browserMode,
-              link: 'http://example.com',
+              link: runtimeSettings.link ?? undefined,
             },
           };
         },

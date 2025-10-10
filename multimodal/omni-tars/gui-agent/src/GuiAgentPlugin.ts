@@ -6,7 +6,7 @@ import { AgentMode, AgentPlugin, COMPUTER_USE_ENVIRONMENT } from '@omni-tars/cor
 import { Tool, LLMRequestHookPayload, ChatCompletionContentPart } from '@tarko/agent';
 import { ConsoleLogger, createGUIErrorResponse, LogLevel } from '@tarko/shared-utils';
 import { Base64ImageParser } from '@agent-infra/media-utils';
-import { ImageCompressor, formatBytes } from '@tarko/shared-media-utils';
+import { ImageCompressor, formatBytes } from './utils/ImageCompressor';
 import { OperatorManager } from './OperatorManager';
 import { sleep } from '@gui-agent/shared/utils';
 
@@ -38,9 +38,13 @@ export class GuiAgentPlugin extends AgentPlugin {
 
   async initialize(): Promise<void> {
     if (this.agentMode && this.agentMode.id === 'game' && !this.initializedWithMode) {
-      await this.emitPresetUserQuey();
-      await this.emitScreenshotEvent(4000);
-      await this.emitPresetAssistantMessage();
+      if (this.agentMode.link) {
+        await this.emitPresetUserQuey();
+        await this.emitScreenshotEvent(4000);
+        await this.emitPresetAssistantNavMsg();
+      } else {
+        await this.emitPresetAssistantWaitMsg();
+      }
       this.initializedWithMode = true;
     }
 
@@ -178,14 +182,27 @@ export class GuiAgentPlugin extends AgentPlugin {
     }
   }
 
-  private async emitPresetAssistantMessage(): Promise<void> {
+  private async emitPresetAssistantNavMsg(): Promise<void> {
     const eventStream = this.agent.getEventStream();
     const events = eventStream.getEvents();
     // Only emit if no assistant messages exist yet
     const hasAssistantMessage = events.some((event) => event.type === 'assistant_message');
     if (!hasAssistantMessage) {
       const event = eventStream.createEvent('assistant_message', {
-        content: `Successfully navigated to ${this.agentMode!.link}, page loaded completely.`,
+        content: `Successfully navigated to ${this.agentMode!.link}, and the page has loaded.`,
+      });
+      eventStream.sendEvent(event);
+    }
+  }
+
+  private async emitPresetAssistantWaitMsg(): Promise<void> {
+    const eventStream = this.agent.getEventStream();
+    const events = eventStream.getEvents();
+    // Only emit if no assistant messages exist yet
+    const hasAssistantMessage = events.some((event) => event.type === 'assistant_message');
+    if (!hasAssistantMessage) {
+      const event = eventStream.createEvent('assistant_message', {
+        content: `Just tell me which game you want me to play, and I’ll begin!`,
       });
       eventStream.sendEvent(event);
     }
